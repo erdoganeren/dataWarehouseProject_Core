@@ -1,0 +1,15 @@
+#server:
+#  port: 8080
+
+#spring:
+#  application:
+#    name: authentication-service
+#  data:
+#    mongodb:
+#      uri: mongodb://localhost:27017/accountService
+
+#spring.se  security:
+
+#jwt:
+#  secret: mySecret
+#  expiration: 604800
