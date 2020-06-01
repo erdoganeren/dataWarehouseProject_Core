@@ -8,7 +8,6 @@ import java.util.Objects;
 public class User implements Cloneable {
 
     @Id
-    //@GeneratedValue(strategy = GenerationType.AUTO)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "UserID", updatable = false, nullable = false)
     private long id;

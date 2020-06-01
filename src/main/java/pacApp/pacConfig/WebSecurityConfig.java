@@ -48,15 +48,19 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
-    	 httpSecurity
+		httpSecurity.headers().frameOptions().sameOrigin();
+    	httpSecurity
          .csrf().disable()
          .exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
          .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
          .authorizeRequests()
-         .antMatchers("/auth/**").permitAll()
+         .antMatchers("/auth/**").permitAll().and()
+         .authorizeRequests()
+         .antMatchers("/h2-console/**").permitAll()
          .anyRequest().authenticated();
 
 		 httpSecurity.addFilterBefore(authenticationTokenFilterBean(), UsernamePasswordAuthenticationFilter.class);
 		 httpSecurity.headers().cacheControl();
+
     }
 }
