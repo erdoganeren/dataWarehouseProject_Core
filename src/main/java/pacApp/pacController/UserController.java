@@ -49,10 +49,7 @@ public class UserController extends BaseRestController {
         long userId = user.getId();
         String email = user.getEmail();
 
-        if (userId != 1L && !email.equals("admin@carrental.com")) {
-            GenericResponse response = new GenericResponse(HttpStatus.FORBIDDEN.value(),"Request forbidden");
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN.value(), HttpStatus.FORBIDDEN);
-        }
+        //GenericResponse response = new GenericResponse(HttpStatus.FORBIDDEN.value(),"Request forbidden");
 
         List<User> users = this.repository.findAll();
 

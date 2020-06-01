@@ -34,7 +34,7 @@ public class AuthenticationController {
         this.authenticationService = authenticationService;
     }
 
-    @CrossOrigin
+
     @RequestMapping(value = "/auth", method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
