@@ -2,9 +2,11 @@ package pacApp.pacController;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,6 +23,10 @@ import pacApp.pacModel.pacResponse.GenericResponse;
 public class OrtController {
 	
 	private final OrtRepository repository;
+
+	@Autowired
+	private KafkaTemplate<Object, Object> template;
+
 	
 	public OrtController(OrtRepository repository) {
         this.repository = repository;
@@ -40,9 +46,11 @@ public class OrtController {
 	public ResponseEntity<GenericResponse> addOrt(@RequestBody Ort ort){
 		
 		this.repository.saveAndFlush(ort);
+		
 		GenericResponse response = new GenericResponse(HttpStatus.OK.value(), "Ort hinzgefügt!");
 	    return new ResponseEntity<>(response, HttpStatus.OK);
 	}
+	
 	@RequestMapping(value = "/ortupdate", method = RequestMethod.POST,
 			consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
