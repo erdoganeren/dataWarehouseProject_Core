@@ -23,6 +23,7 @@ public class PersonController {
 	public PersonController(PersonRepository repository) {
         this.repository = repository;
     }
+	
 	@CrossOrigin
     @GetMapping("/personlist")
 	public ResponseEntity<List<Person>> getAllOrt() {
@@ -30,13 +31,35 @@ public class PersonController {
 		List<Person> personList = this.repository.findAll();
 		return new ResponseEntity<>(personList, HttpStatus.OK);
 	}
+	
 	@RequestMapping(value = "/person", method = RequestMethod.POST,
 			consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<GenericResponse> addOrt(@RequestBody Person person){
+	public ResponseEntity<GenericResponse> addPerson(@RequestBody Person person){
 		
 		this.repository.saveAndFlush(person);
 		GenericResponse response = new GenericResponse(HttpStatus.OK.value(), "Person hinzgefügt!");
 	    return new ResponseEntity<>(response, HttpStatus.OK);
 	}
+
+	@RequestMapping(value = "/personupdate", method = RequestMethod.POST,
+			consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<GenericResponse> updatePerson(@RequestBody Person person){		
+		if (person == null){
+            GenericResponse response = new GenericResponse(HttpStatus.BAD_REQUEST.value(),"Person nicht gefunde");
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+		Person personTmp = this.repository.findById(person.getId());
+		if (personTmp == null){
+            GenericResponse response = new GenericResponse(HttpStatus.BAD_REQUEST.value(),"Person nicht gefunden");
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+		personTmp.setVorname(person.getVorname());
+		personTmp.setNachname(person.getNachname());
+		this.repository.saveAndFlush(personTmp);
+		GenericResponse response = new GenericResponse(HttpStatus.OK.value(), "Person bearbeitet!");
+	    return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
 }
