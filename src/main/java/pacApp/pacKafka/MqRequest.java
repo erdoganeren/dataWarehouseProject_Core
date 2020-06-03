@@ -1,15 +1,13 @@
 package pacApp.pacKafka;
 
-import java.io.Serializable;
+public class MqRequest{
 
-public class MqRequest extends JavaSerializer{
-
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
 	private String mqMessage;
 
+	public MqRequest(String mqMessage) {
+		this.mqMessage = mqMessage;
+	}
 	public String getMqMessage() {
 		return mqMessage;
 	}

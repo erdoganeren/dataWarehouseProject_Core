@@ -14,14 +14,13 @@ import pacApp.pacKafka.MqRequest;
 public class TestController {
 
 	@Autowired
-	private KafkaTemplate<Object, Object> template;
+	private KafkaTemplate<String, MqRequest> kafkaTemplete;
 
 	@GetMapping("/test")
 	public String getTestMessage() {	
-		MqRequest mqr =  new MqRequest();
-		mqr.setMqMessage("halloTest");
-		this.template.send("topic1", mqr);
+		this.kafkaTemplete.send("topic1", new MqRequest("test"));
 		return "TestMessage";
 	}
 
 }
+ 

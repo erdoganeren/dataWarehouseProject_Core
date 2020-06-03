@@ -23,10 +23,6 @@ import pacApp.pacModel.pacResponse.GenericResponse;
 public class OrtController {
 	
 	private final OrtRepository repository;
-
-	@Autowired
-	private KafkaTemplate<Object, Object> template;
-
 	
 	public OrtController(OrtRepository repository) {
         this.repository = repository;
