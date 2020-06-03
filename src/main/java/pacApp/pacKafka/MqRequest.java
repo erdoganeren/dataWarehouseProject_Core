@@ -2,6 +2,9 @@ package pacApp.pacKafka;
 
 public class MqRequest{
 
+	public MqRequest() {
+	}
+
 	private static final long serialVersionUID = 1L;
 	private String mqMessage;
 
