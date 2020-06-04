@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import io.swagger.annotations.Api;
 import pacApp.pacKafka.MqRequest;
+import pacApp.pacModel.Person;
 
 @RestController
 @Api(value = "TestController", description = "Operations pertaining to Test")
@@ -18,9 +19,8 @@ public class TestController {
 
 	@GetMapping("/test")
 	public String getTestMessage() {	
-		this.kafkaTemplete.send("topic1", new MqRequest("test"));
+		this.kafkaTemplete.send("topic1", new MqRequest("testt",Person.class.getName() ,new Person()));
 		return "TestMessage";
 	}
 
 }
- 

@@ -2,9 +2,11 @@ package pacApp.pacController;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,12 +15,18 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import pacApp.pacData.PersonRepository;
+import pacApp.pacKafka.MqRequest;
+import pacApp.pacKafka.SqlActionEnum;
 import pacApp.pacModel.Person;
 import pacApp.pacModel.pacResponse.GenericResponse;
 
 @RestController
 public class PersonController {
 	private final PersonRepository repository;
+	private final String PERSON_CLASS_NAME = Person.class.getName();
+	
+	@Autowired
+	private KafkaTemplate<String, MqRequest> kafkaTemplete;
 	
 	public PersonController(PersonRepository repository) {
         this.repository = repository;
@@ -38,6 +46,7 @@ public class PersonController {
 	public ResponseEntity<GenericResponse> addPerson(@RequestBody Person person){
 		
 		this.repository.saveAndFlush(person);
+		this.kafkaTemplete.send("topic1", new MqRequest(SqlActionEnum.SQL_ACTION_ADD, PERSON_CLASS_NAME, person));
 		GenericResponse response = new GenericResponse(HttpStatus.OK.value(), "Person hinzgefügt!");
 	    return new ResponseEntity<>(response, HttpStatus.OK);
 	}
@@ -57,6 +66,7 @@ public class PersonController {
         }
 		personTmp.setVorname(person.getVorname());
 		personTmp.setNachname(person.getNachname());
+		this.kafkaTemplete.send("topic1", new MqRequest(SqlActionEnum.SQL_ACTION_ADD, PERSON_CLASS_NAME, personTmp));
 		this.repository.saveAndFlush(personTmp);
 		GenericResponse response = new GenericResponse(HttpStatus.OK.value(), "Person bearbeitet!");
 	    return new ResponseEntity<>(response, HttpStatus.OK);

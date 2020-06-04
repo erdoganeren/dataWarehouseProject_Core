@@ -8,5 +8,5 @@ import pacApp.pacModel.Ort;
 
 public interface OrtRepository extends JpaRepository<Ort, Long> {
 	Ort findById(long id);
-    Optional<Ort> findOneByPlz(int plz);
+    Optional<Ort> findOneByPlz(long plz);
 }

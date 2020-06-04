@@ -105,7 +105,7 @@ public class UserController extends BaseRestController {
 
         user.setId(0L);
 
-        this.repository.saveUser(user);
+        this.repository.save(user);
 
         GenericResponse response = new GenericResponse(HttpStatus.OK.value(), "User registration successful");
 

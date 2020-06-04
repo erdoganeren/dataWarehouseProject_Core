@@ -13,17 +13,20 @@ public class Ort {
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ortid", updatable = false, nullable = false)
-	private int ortid; 
-	public int getId() {
+	private long ortid;
+	private long plz;
+	private String ortsname;
+	
+	public long getId() {
 		return ortid;
 	}
-	public void setId(int ortid) {
+	public void setId(long ortid) {
 		this.ortid = ortid;
 	}
-	public int getPlz() {
+	public long getPlz() {
 		return plz;
 	}
-	public void setPlz(int plz) {
+	public void setPlz(long plz) {
 		this.plz = plz;
 	}
 	public String getOrtsname() {
@@ -31,8 +34,5 @@ public class Ort {
 	}
 	public void setOrtsname(String ortsname) {
 		this.ortsname = ortsname;
-	}
-	private int plz;
-	private String ortsname;
-	
+	}	
 }
