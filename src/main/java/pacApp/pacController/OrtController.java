@@ -10,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -53,7 +54,7 @@ public class OrtController {
 	@RequestMapping(value = "/ortupdate", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<GenericResponse> updateOrt(@RequestBody Ort ort){		
 		if (ort == null){
-            GenericResponse response = new GenericResponse(HttpStatus.BAD_REQUEST.value(),"Person nicht gefunde");
+            GenericResponse response = new GenericResponse(HttpStatus.BAD_REQUEST.value(),"Ort nicht gefunde");
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
 		Optional<Ort> optOrt = this.repository.findOneByPlz(ort.getPlz());
@@ -68,6 +69,20 @@ public class OrtController {
 		this.kafkaTemplete.send("topic1", new MqRequest(SqlActionEnum.SQL_ACTION_UPDATE, ORT_CLASS_NAME, ortTmp));
 		this.repository.saveAndFlush(ortTmp);
 		GenericResponse response = new GenericResponse(HttpStatus.OK.value(), "Ort bearbeitet!");
+	    return new ResponseEntity<>(response, HttpStatus.OK);
+	}
+	
+	@RequestMapping(value={"/ortdelete/{id}"}, method=RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<GenericResponse> deleteOrt(@PathVariable(value="id") String id){		
+		Ort optOrt = this.repository.findById(Long.parseLong(id));
+		if (optOrt == null){
+            GenericResponse response = new GenericResponse(HttpStatus.BAD_REQUEST.value(),"Ort nicht gefunden");
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
+		Ort ortTmp = optOrt;
+		this.repository.delete(ortTmp);
+		this.kafkaTemplete.send("topic1", new MqRequest(SqlActionEnum.SQL_ACTION_DELETE, ORT_CLASS_NAME, ortTmp));
+		GenericResponse response = new GenericResponse(HttpStatus.OK.value(), "Ort wurde gelöscht!");
 	    return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 }
