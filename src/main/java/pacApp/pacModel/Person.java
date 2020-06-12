@@ -37,7 +37,7 @@ public class Person {
 	public void setNachname(String nachname) {
 		this.nachname = nachname;
 	}
-//	public String getEmail() {
+	//	public String getEmail() {
 //		return email;
 //	}
 //	public void setEmail(String email) {

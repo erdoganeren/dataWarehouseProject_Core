@@ -65,4 +65,3 @@ public class Haus {
 		this.personen = personen;
 	}
 }
- 

@@ -34,5 +34,5 @@ public class Ort {
 	}
 	public void setOrtsname(String ortsname) {
 		this.ortsname = ortsname;
-	}	
+	}
 }
