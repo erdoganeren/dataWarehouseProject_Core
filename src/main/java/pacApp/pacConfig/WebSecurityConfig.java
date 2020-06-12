@@ -56,6 +56,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
          .authorizeRequests()
          .antMatchers("/auth/**").permitAll().and()
          .authorizeRequests()
+         .antMatchers("/**").permitAll().and().authorizeRequests() // Without this line I got CORS Policy exception
          .antMatchers("/h2-console/**").permitAll()
          .anyRequest().authenticated();
 

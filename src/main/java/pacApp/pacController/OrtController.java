@@ -52,12 +52,12 @@ public class OrtController {
 	}
 	
 	@RequestMapping(value = "/ortupdate", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<GenericResponse> updateOrt(@RequestBody Ort ort){		
+	public ResponseEntity<GenericResponse> updateOrt(@RequestBody Ort ort){
 		if (ort == null){
             GenericResponse response = new GenericResponse(HttpStatus.BAD_REQUEST.value(),"Ort nicht gefunde");
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
-		Optional<Ort> optOrt = this.repository.findOneByPlz(ort.getPlz());
+		Optional<Ort> optOrt = this.repository.findById(ort.getId());
 		
 		if (!optOrt.isPresent()){
             GenericResponse response = new GenericResponse(HttpStatus.BAD_REQUEST.value(),"Ort nicht gefunden");
@@ -73,13 +73,16 @@ public class OrtController {
 	}
 	
 	@RequestMapping(value={"/ortdelete/{id}"}, method=RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<GenericResponse> deleteOrt(@PathVariable(value="id") String id){		
-		Ort optOrt = this.repository.findById(Long.parseLong(id));
+	public ResponseEntity<GenericResponse> deleteOrt(@PathVariable(value="id") String id){
+		Optional<Ort> optOrt = this.repository.findById(Long.parseLong(id));
 		if (optOrt == null){
             GenericResponse response = new GenericResponse(HttpStatus.BAD_REQUEST.value(),"Ort nicht gefunden");
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
-		Ort ortTmp = optOrt;
+		Ort ortTmp = new Ort();
+		ortTmp.setId(optOrt.get().getId());
+		ortTmp.setOrtsname(optOrt.get().getOrtsname());
+		ortTmp.setPlz(optOrt.get().getPlz());
 		this.repository.delete(ortTmp);
 		this.kafkaTemplete.send("topic1", new MqRequest(SqlActionEnum.SQL_ACTION_DELETE, ORT_CLASS_NAME, ortTmp));
 		GenericResponse response = new GenericResponse(HttpStatus.OK.value(), "Ort wurde gelöscht!");
