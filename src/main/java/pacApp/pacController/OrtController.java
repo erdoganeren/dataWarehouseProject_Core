@@ -20,8 +20,6 @@ import pacApp.pacData.OrtRepository;
 import pacApp.pacKafka.MqRequest;
 import pacApp.pacKafka.SqlActionEnum;
 import pacApp.pacModel.Ort;
-import pacApp.pacModel.Person;
-import pacApp.pacModel.User;
 import pacApp.pacModel.pacResponse.GenericResponse;
 
 @RestController
@@ -45,6 +43,11 @@ public class OrtController {
 	
 	@RequestMapping(value = "/ort", method = RequestMethod.POST,consumes = MediaType.APPLICATION_JSON_VALUE,produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<GenericResponse> addOrt(@RequestBody Ort ort){
+		List<Ort> ortList =  repository.findAllByPlz(ort.getPlz());
+		if (!ortList.isEmpty()){
+			GenericResponse response = new GenericResponse(HttpStatus.BAD_REQUEST.value(),"Ort vorhanden und konnte daher nicht hinzugefügt werden");
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+		}		
 		this.repository.saveAndFlush(ort);		
 		this.kafkaTemplete.send("topic1", new MqRequest(SqlActionEnum.SQL_ACTION_ADD, ORT_CLASS_NAME, ort));
 		GenericResponse response = new GenericResponse(HttpStatus.OK.value(), "Ort hinzgefügt!");

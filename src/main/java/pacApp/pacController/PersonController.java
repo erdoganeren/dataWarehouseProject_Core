@@ -44,7 +44,11 @@ public class PersonController {
 			consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<GenericResponse> addPerson(@RequestBody Person person){
-		
+		List<Person> personList = this.repository.findAllById(person.getId());
+		if (!personList.isEmpty()){
+            GenericResponse response = new GenericResponse(HttpStatus.BAD_REQUEST.value(),"Person vorhanden");
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
 		this.repository.saveAndFlush(person);
 		this.kafkaTemplete.send("topic1", new MqRequest(SqlActionEnum.SQL_ACTION_ADD, PERSON_CLASS_NAME, person));
 		GenericResponse response = new GenericResponse(HttpStatus.OK.value(), "Person hinzgefügt!");
