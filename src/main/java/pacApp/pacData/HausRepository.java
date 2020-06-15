@@ -9,6 +9,6 @@ import pacApp.pacModel.Haus;
 import pacApp.pacModel.Ort;
 
 public interface HausRepository extends JpaRepository<Haus, Long> {
-	Optional<Haus> findOneById(long id);
+	Haus findOneById(long id);
 	List<Haus> findAllById(long id);
 }

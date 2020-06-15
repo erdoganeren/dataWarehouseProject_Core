@@ -58,7 +58,7 @@ public class HausController {
 	@RequestMapping(value={"/hausdelete/{id}"}, method=RequestMethod.GET,produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<GenericResponse> deleteHaus(@PathVariable(value="id") String id){
 		Optional<Haus> optHaus = this.repository.findById(Long.parseLong(id));
-		if (optHaus == null){
+		if (optHaus.isEmpty()){
             GenericResponse response = new GenericResponse(HttpStatus.BAD_REQUEST.value(),"Ort nicht gefunden");
             return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
         }
